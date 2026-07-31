@@ -6,9 +6,9 @@ A modern full-stack grocery e-commerce platform for **Chaudhary General Store**,
 
 ## 🌐 Live Demo
 
-**Website:** chaudhary-general-store-ecommerce.vercel.app
+👉 **Chaudhary General Store (Live Website)**
 
----
+https://chaudhary-general-store-ecommerce.vercel.app/
 
 ## ✨ Features
 
