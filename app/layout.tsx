@@ -9,6 +9,7 @@ import { Toaster } from 'sonner';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://localhost:3000'),
   title: 'Chaudhary General Store | चौधरी जेनरल स्टोर',
   description: 'Your trusted neighborhood kirana store in Bhagwanpur, Bihar. Fresh groceries and daily essentials. Owner: Kundan Kumar Chaudhary.',
   keywords: 'kirana store, grocery, online grocery, Bihar, Bhagwanpur, delivery, fresh, dairy, snacks, Chaudhary General Store',

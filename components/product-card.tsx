@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { Product } from '@/lib/supabase';
@@ -11,8 +12,9 @@ export function ProductCard({ product }: { product: Product }) {
   const { addItem, toggleWishlist, isWishlisted } = useCart();
   const wishlisted = isWishlisted(product.id);
 
-  const handleAdd = (e: React.MouseEvent) => {
+  const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     addItem(product);
     toast.success(`${product.name} added to cart`);
   };
@@ -28,10 +30,12 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="relative bg-card rounded-xl border overflow-hidden transition-all hover:shadow-lg hover:border-primary/30">
         <div className="relative aspect-square bg-muted overflow-hidden">
           {product.image_url ? (
-            <img
+            <Image
               src={product.image_url}
               alt={product.name}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              fill
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+              className="object-cover transition-transform group-hover:scale-105"
               loading="lazy"
             />
           ) : (
@@ -66,6 +70,7 @@ export function ProductCard({ product }: { product: Product }) {
             <span className="font-bold text-base">₹{product.price}</span>
           </div>
           <Button
+            type="button"
             onClick={handleAdd}
             size="sm"
             className="w-full mt-2 group-hover:bg-primary group-hover:text-primary-foreground"

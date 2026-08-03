@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase, Order } from '@/lib/supabase';
@@ -40,11 +41,7 @@ export default function OrderDetailPage() {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    fetchOrder();
-  }, [orderNumber]);
-
-  async function fetchOrder() {
+  const fetchOrder = useCallback(async () => {
     const { data: ord } = await supabase.from('orders').select('*').eq('order_number', orderNumber).single();
     if (ord) {
       const { data: items } = await supabase.from('order_items').select('*').eq('order_id', ord.id);
@@ -52,7 +49,11 @@ export default function OrderDetailPage() {
       if (ord.utr_number) setUtrNumber(ord.utr_number);
     }
     setLoading(false);
-  }
+  }, [orderNumber]);
+
+  useEffect(() => {
+    fetchOrder();
+  }, [fetchOrder]);
 
   const isUpiOrder = order && ['upi', 'phonepe', 'googlepay', 'paytm'].includes(order.payment_method);
   const needsPaymentSubmission = isUpiOrder && order && order.payment_status === 'pending_verification' && !order.utr_number;
@@ -314,9 +315,11 @@ export default function OrderDetailPage() {
               {order.payment_screenshot_url && order.payment_status !== 'paid' && (
                 <div className="border-t pt-4">
                   <Label className="mb-2 block">Submitted Screenshot</Label>
-                  <img
+                  <Image
                     src={order.payment_screenshot_url}
                     alt="Payment Screenshot"
+                    width={320}
+                    height={240}
                     className="max-h-48 rounded-lg border"
                   />
                 </div>
@@ -331,7 +334,7 @@ export default function OrderDetailPage() {
               {order.order_items?.map((item) => (
                 <div key={item.id} className="flex gap-3 items-center">
                   {item.product_image && (
-                    <img src={item.product_image} alt={item.product_name} className="h-16 w-16 rounded-lg object-cover border" />
+                    <Image src={item.product_image} alt={item.product_name} width={64} height={64} className="h-16 w-16 rounded-lg object-cover border" />
                   )}
                   <div className="flex-1">
                     <div className="font-medium">{item.product_name}</div>

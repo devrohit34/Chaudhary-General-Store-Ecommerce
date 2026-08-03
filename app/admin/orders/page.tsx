@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState, useCallback } from 'react';
 import { supabase, Order, OrderItem } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
@@ -430,9 +431,11 @@ export default function AdminOrdersPage() {
                                         <span className="font-mono font-medium ml-2">{order.utr_number}</span>
                                       </div>
                                       {order.payment_screenshot_url && (
-                                        <img
+                                        <Image
                                           src={order.payment_screenshot_url}
                                           alt="Screenshot"
+                                          width={80}
+                                          height={80}
                                           className="h-20 rounded border object-cover cursor-pointer"
                                           onClick={() => window.open(order.payment_screenshot_url!, '_blank')}
                                         />
@@ -583,9 +586,11 @@ export default function AdminOrdersPage() {
                         {selectedOrder.order_items?.map((item) => (
                           <div key={item.id} className="flex gap-4 py-3 first:pt-0 last:pb-0">
                             {item.product_image ? (
-                              <img
+                              <Image
                                 src={item.product_image}
                                 alt={item.product_name}
+                                width={64}
+                                height={64}
                                 className="h-16 w-16 rounded-lg object-cover border"
                               />
                             ) : (
@@ -664,9 +669,11 @@ export default function AdminOrdersPage() {
                               <h4 className="font-medium mb-2 flex items-center gap-2">
                                 <Camera className="h-4 w-4 text-green-600" /> Payment Screenshot
                               </h4>
-                              <img
+                              <Image
                                 src={selectedOrder.payment_screenshot_url}
                                 alt="Payment Screenshot"
+                                width={320}
+                                height={240}
                                 className="max-h-48 rounded-lg border cursor-pointer"
                                 onClick={() => window.open(selectedOrder.payment_screenshot_url!, '_blank')}
                               />

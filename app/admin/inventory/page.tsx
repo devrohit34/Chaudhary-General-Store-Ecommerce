@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { supabase, Product } from '@/lib/supabase';
 import { Badge } from '@/components/ui/badge';
@@ -176,7 +177,7 @@ export default function InventoryPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         {p.image_url ? (
-                          <img src={p.image_url} alt={p.name} className="h-9 w-9 rounded-lg object-cover border" />
+                          <Image src={p.image_url} alt={p.name} width={36} height={36} className="h-9 w-9 rounded-lg object-cover border" />
                         ) : (
                           <div className="h-9 w-9 rounded-lg bg-gray-100 flex items-center justify-center">
                             <Package className="h-4 w-4 text-gray-400" />
@@ -236,7 +237,7 @@ export default function InventoryPage() {
             <div className="space-y-4">
               <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
                 {editing.image_url && (
-                  <img src={editing.image_url} alt={editing.name} className="h-12 w-12 rounded-lg object-cover" />
+                  <Image src={editing.image_url} alt={editing.name} width={48} height={48} className="h-12 w-12 rounded-lg object-cover" />
                 )}
                 <div>
                   <div className="font-medium">{editing.name}</div>

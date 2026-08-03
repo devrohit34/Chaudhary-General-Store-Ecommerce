@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useCart } from '@/lib/cart-context';
@@ -64,9 +65,11 @@ export default function AccountPage() {
     return (
       <div className="container mx-auto px-4 py-8 max-w-md animate-fade-in">
         <div className="text-center mb-8">
-          <img
+          <Image
             src="/images/shop-photos/WhatsApp_Image_2026-06-25_at_12.55.44_PM.jpeg"
             alt="Chaudhary General Store Logo"
+            width={80}
+            height={80}
             className="h-20 w-auto object-contain mx-auto mb-4"
           />
           <h1 className="text-2xl font-bold">Welcome to Chaudhary General Store</h1>
@@ -160,8 +163,8 @@ export default function AccountPage() {
                 <div className="flex gap-3 overflow-x-auto scrollbar-hide">
                   {recentlyViewed.slice(0, 6).map((p) => (
                     <Link key={p.id} href={`/product/${p.slug}`} className="flex-shrink-0 w-24">
-                      <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-1">
-                        {p.image_url && <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" />}
+                      <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-1 relative">
+                        {p.image_url && <Image src={p.image_url} alt={p.name} fill className="object-cover" />}
                       </div>
                       <div className="text-xs line-clamp-2">{p.name}</div>
                       <div className="text-xs font-bold text-primary">₹{p.price}</div>

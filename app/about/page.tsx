@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Truck, ShieldCheck, Clock, Package, MapPin, Phone, Mail, User } from 'lucide-react';
@@ -9,10 +10,12 @@ export default function AboutPage() {
     <div className="animate-fade-in">
       {/* Hero with store photo */}
       <section className="relative h-[300px] overflow-hidden">
-        <img
+        <Image
           src="/images/shop-photos/My_Dukaan_pic.jpeg"
           alt="Chaudhary General Store"
-          className="h-full w-full object-cover"
+          fill
+          priority
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/30" />
         <div className="absolute inset-0 flex items-center">
@@ -50,10 +53,11 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="relative rounded-2xl overflow-hidden min-h-[300px]">
-            <img
+            <Image
               src="/images/shop-photos/Dukaan_pics.jpeg"
               alt="Our Store Interior"
-              className="absolute inset-0 h-full w-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
         </div>

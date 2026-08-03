@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { supabase, Product, Category } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
@@ -75,23 +76,7 @@ export default function AdminProductsPage() {
     setDragOver(false);
   }, []);
 
-  const handleDrop = useCallback(async (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-    const files = e.dataTransfer.files;
-    if (files && files[0]) {
-      await uploadImage(files[0]);
-    }
-  }, []);
-
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files[0]) {
-      await uploadImage(files[0]);
-    }
-  };
-
-  const uploadImage = async (file: File) => {
+  const uploadImage = useCallback(async (file: File) => {
     if (file.size > 5 * 1024 * 1024) {
       toast.error('File too large. Max 5MB.');
       return;
@@ -105,9 +90,7 @@ export default function AdminProductsPage() {
     setUploading(true);
 
     try {
-      // Compress image if needed
       const compressedFile = await compressImage(file);
-
       const fileExt = compressedFile.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
       const filePath = `products/${fileName}`;
@@ -119,12 +102,28 @@ export default function AdminProductsPage() {
       if (uploadError) throw uploadError;
 
       const { data: urlData } = supabase.storage.from('product-images').getPublicUrl(filePath);
-      setForm({ ...form, image_url: urlData.publicUrl });
+      setForm((current) => ({ ...current, image_url: urlData.publicUrl }));
       toast.success('Image uploaded successfully');
     } catch {
       toast.error('Failed to upload image');
     }
     setUploading(false);
+  }, []);
+
+  const handleDrop = useCallback(async (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const files = e.dataTransfer.files;
+    if (files && files[0]) {
+      await uploadImage(files[0]);
+    }
+  }, [uploadImage]);
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files[0]) {
+      await uploadImage(files[0]);
+    }
   };
 
   const compressImage = async (file: File): Promise<File> => {
@@ -175,7 +174,7 @@ export default function AdminProductsPage() {
   };
 
   const clearImage = () => {
-    setForm({ ...form, image_url: '' });
+    setForm((current) => ({ ...current, image_url: '' }));
   };
 
   const save = async () => {
@@ -284,7 +283,7 @@ export default function AdminProductsPage() {
                       <div className="flex items-center gap-3">
                         <div className="h-12 w-12 rounded-lg bg-gray-100 border flex items-center justify-center overflow-hidden flex-shrink-0">
                           {p.image_url ? (
-                            <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" />
+                            <Image src={p.image_url} alt={p.name} fill className="object-cover" />
                           ) : (
                             <ImageIcon className="h-5 w-5 text-gray-400" />
                           )}
@@ -367,9 +366,11 @@ export default function AdminProductsPage() {
                   </div>
                 ) : form.image_url ? (
                   <div className="relative inline-block">
-                    <img
+                    <Image
                       src={form.image_url}
                       alt="Product preview"
+                      width={160}
+                      height={160}
                       className="h-40 w-40 object-cover rounded-lg mx-auto shadow-sm"
                     />
                     <button

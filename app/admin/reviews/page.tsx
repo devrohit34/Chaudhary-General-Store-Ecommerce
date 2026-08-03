@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Badge } from '@/components/ui/badge';
@@ -124,9 +125,11 @@ export default function ReviewsPage() {
             <div key={r.id} className="bg-white rounded-xl border shadow-sm p-4">
               <div className="flex items-start gap-4">
                 {r.products?.image_url && (
-                  <img
+                  <Image
                     src={r.products.image_url}
                     alt={r.products.name}
+                    width={48}
+                    height={48}
                     className="h-12 w-12 rounded-lg object-cover border flex-shrink-0"
                   />
                 )}

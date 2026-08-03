@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -72,9 +73,11 @@ export function Header() {
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
             <Link href="/" className="flex items-center gap-2">
-              <img
+              <Image
                 src="/images/shop-photos/WhatsApp_Image_2026-06-25_at_12.55.44_PM.jpeg"
                 alt="Chaudhary General Store Logo"
+                width={40}
+                height={40}
                 className="h-10 w-auto object-contain"
               />
               <div className="hidden sm:block">
@@ -108,7 +111,7 @@ export function Header() {
                     className="flex items-center gap-3 p-3 hover:bg-muted transition-colors border-b last:border-0"
                   >
                     {p.image_url && (
-                      <img src={p.image_url} alt={p.name} className="h-10 w-10 rounded object-cover" />
+                      <Image src={p.image_url} alt={p.name} width={40} height={40} className="h-10 w-10 rounded object-cover" />
                     )}
                     <div className="flex-1">
                       <div className="text-sm font-medium">{p.name}</div>

@@ -1,11 +1,14 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
 import { Button } from '@/components/ui/button';
 import { Minus, Plus, Trash2, ShoppingCart, ChevronRight } from 'lucide-react';
 
 export default function CartPage() {
+  const router = useRouter();
   const { items, updateQuantity, removeItem, subtotal, totalItems } = useCart();
   const deliveryCharge = subtotal >= 999 ? 0 : 69;
   const total = subtotal + deliveryCharge;
@@ -38,9 +41,9 @@ export default function CartPage() {
           {items.map((item) => (
             <div key={item.id} className="flex gap-4 border rounded-xl p-4 bg-card">
               <Link href={`/product/${item.product.slug}`} className="flex-shrink-0">
-                <div className="h-24 w-24 rounded-lg overflow-hidden bg-muted">
+                <div className="relative h-24 w-24 rounded-lg overflow-hidden bg-muted">
                   {item.product.image_url && (
-                    <img src={item.product.image_url} alt={item.product.name} className="h-full w-full object-cover" />
+                    <Image src={item.product.image_url} alt={item.product.name} fill sizes="96px" className="object-contain" />
                   )}
                 </div>
               </Link>
@@ -89,9 +92,9 @@ export default function CartPage() {
                 <span>₹{total.toFixed(0)}</span>
               </div>
             </div>
-            <Link href="/checkout">
-              <Button className="w-full" size="lg">Proceed to Checkout</Button>
-            </Link>
+            <Button className="w-full" size="lg" onClick={() => router.push('/checkout')}>
+              Proceed to Checkout
+            </Button>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase, Order } from '@/lib/supabase';
@@ -90,7 +91,7 @@ export default function OrdersPage() {
                     {order.order_items?.slice(0, 5).map((item, i) => (
                       <div key={i} className="h-12 w-12 rounded-lg overflow-hidden bg-muted border">
                         {item.product_image && (
-                          <img src={item.product_image} alt={item.product_name} className="h-full w-full object-cover" />
+                          <Image src={item.product_image} alt={item.product_name} fill className="object-cover" />
                         )}
                       </div>
                     ))}

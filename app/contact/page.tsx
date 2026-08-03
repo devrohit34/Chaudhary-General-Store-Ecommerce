@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Phone, Mail, MapPin, Instagram, MessageCircle, Clock, User, ChevronRight } from 'lucide-react';
@@ -9,10 +10,12 @@ export default function ContactPage() {
     <div className="animate-fade-in">
       {/* Hero with store photo */}
       <section className="relative h-[280px] overflow-hidden">
-        <img
+        <Image
           src="/images/shop-photos/My_Dukaan_Pics.jpeg"
           alt="Chaudhary General Store"
-          className="h-full w-full object-cover"
+          fill
+          priority
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/30" />
         <div className="absolute inset-0 flex items-center">
@@ -146,10 +149,11 @@ export default function ContactPage() {
           {/* Store Photo */}
           <div className="space-y-4">
             <div className="relative rounded-2xl overflow-hidden min-h-[400px]">
-              <img
+              <Image
                 src="/images/shop-photos/My_Dukaan_pic.jpeg"
                 alt="Chaudhary General Store"
-                className="absolute inset-0 h-full w-full object-cover"
+                fill
+                className="object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
                 <h3 className="text-white font-bold text-xl">Chaudhary General Store</h3>
@@ -158,10 +162,11 @@ export default function ContactPage() {
             </div>
 
             <div className="relative rounded-2xl overflow-hidden min-h-[200px]">
-              <img
+              <Image
                 src="/images/shop-photos/ChatGPT_Image_Jul_2,_2026,_12_06_40_AM.png"
                 alt="Store Interior"
-                className="absolute inset-0 h-full w-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
           </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { supabase, Order } from '@/lib/supabase';
 import { Badge } from '@/components/ui/badge';
@@ -174,9 +175,11 @@ export default function PaymentsPage() {
                     )}
                     {order.payment_screenshot_url && (
                       <div className="flex items-center gap-3">
-                        <img
+                        <Image
                           src={order.payment_screenshot_url}
                           alt="Screenshot"
+                          width={64}
+                          height={64}
                           className="h-16 w-16 rounded-lg border object-cover cursor-pointer hover:opacity-80"
                           onClick={() => window.open(order.payment_screenshot_url!, '_blank')}
                         />

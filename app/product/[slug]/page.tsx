@@ -1,7 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase, Product, Review } from '@/lib/supabase';
 import { useCart } from '@/lib/cart-context';
@@ -19,6 +20,7 @@ export default function ProductDetailPage() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const router = useRouter();
   const { addItem, toggleWishlist, isWishlisted, addRecentlyViewed } = useCart();
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function ProductDetailPage() {
       setLoading(false);
     }
     fetchData();
-  }, [slug]);
+  }, [addRecentlyViewed, slug]);
 
   if (loading) {
     return (
@@ -82,7 +84,7 @@ export default function ProductDetailPage() {
 
   const handleBuyNow = () => {
     addItem(product, quantity);
-    window.location.href = '/checkout';
+    router.push('/checkout');
   };
 
   return (
@@ -98,9 +100,17 @@ export default function ProductDetailPage() {
       <div className="grid md:grid-cols-2 gap-8">
         {/* Image */}
         <div className="relative">
-          <div className="aspect-square rounded-2xl overflow-hidden bg-muted border">
+          <div className="relative mx-auto flex aspect-square w-full max-w-[300px] max-h-[300px] items-center justify-center overflow-hidden rounded-2xl border bg-muted">
             {product.image_url ? (
-              <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
+              <Image
+                src={product.image_url}
+                alt={product.name}
+                width={300}
+                height={300}
+                sizes="(max-width: 768px) 100vw, 300px"
+                className="h-full w-full object-contain"
+                priority
+              />
             ) : (
               <div className="h-full w-full flex items-center justify-center text-9xl">🛒</div>
             )}

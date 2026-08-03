@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase, Category, Product } from '@/lib/supabase';
@@ -29,10 +30,12 @@ export default function HomePage() {
     <div className="animate-fade-in">
       {/* Hero Section with store photo */}
       <section className="relative h-[300px] sm:h-[420px] overflow-hidden">
-        <img
+        <Image
           src="/images/shop-photos/My_Dukaan_Pics.jpeg"
           alt="Chaudhary General Store"
-          className="h-full w-full object-cover"
+          fill
+          priority
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/30" />
         <div className="absolute inset-0 flex items-center">
@@ -151,10 +154,11 @@ export default function HomePage() {
         <div className="rounded-2xl overflow-hidden border">
           <div className="grid md:grid-cols-2">
             <div className="relative min-h-[250px]">
-              <img
+              <Image
                 src="/images/shop-photos/Dukaaan_pics.jpeg"
                 alt="Our Store"
-                className="absolute inset-0 h-full w-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
             <div className="p-8 bg-card flex flex-col justify-center">

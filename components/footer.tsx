@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Phone, Mail, MapPin, Instagram, MessageCircle } from 'lucide-react';
 
@@ -8,9 +9,11 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <img
+              <Image
                 src="/images/shop-photos/WhatsApp_Image_2026-06-25_at_12.55.44_PM.jpeg"
                 alt="Chaudhary General Store Logo"
+                width={40}
+                height={40}
                 className="h-10 w-auto object-contain"
               />
               <div>

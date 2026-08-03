@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
 import { supabase } from '@/lib/supabase';
@@ -57,7 +58,7 @@ export default function CheckoutPage() {
       const isUpi = ['upi', 'phonepe', 'googlepay', 'paytm'].includes(paymentMethod);
       const now = new Date().toISOString();
 
-      const { data: order, error } = await supabase.from('orders').insert({
+      const orderPayload = {
         order_number: orderNumber,
         status: 'pending',
         payment_method: paymentMethod,
@@ -71,30 +72,41 @@ export default function CheckoutPage() {
         delivery_slot: deliverySlot,
         delivery_otp: otp,
         is_express: isExpress,
-      }).select().single();
+        created_at: now,
+        updated_at: now,
+      };
 
-      if (error) throw error;
+      const orderInsertResult = await supabase.from('orders').insert(orderPayload);
+      const order = orderInsertResult?.data && !Array.isArray(orderInsertResult.data)
+        ? orderInsertResult.data
+        : Array.isArray(orderInsertResult?.data) && orderInsertResult.data.length > 0
+          ? orderInsertResult.data[0]
+          : null;
 
-      if (order) {
-        await supabase.from('order_items').insert(
-          items.map((item) => ({
-            order_id: order.id,
-            product_id: item.product_id,
-            product_name: item.product.name,
-            product_image: item.product.image_url,
-            brand: item.product.brand,
-            unit: item.product.unit,
-            price: item.product.price,
-            quantity: item.quantity,
-            gst_percent: item.product.gst_percent,
-          }))
-        );
+      if (!order?.id) {
+        throw new Error('Order creation did not return a valid order id.');
       }
+
+      const orderItemsPayload = items.map((item) => ({
+        order_id: order.id,
+        product_id: item.product_id,
+        product_name: item.product.name,
+        product_image: item.product.image_url,
+        brand: item.product.brand,
+        unit: item.product.unit,
+        price: item.product.price,
+        quantity: item.quantity,
+        gst_percent: item.product.gst_percent,
+        created_at: now,
+      }));
+
+      await supabase.from('order_items').insert(orderItemsPayload);
 
       clearCart();
       toast.success('Order placed successfully!');
       router.push(`/orders/${orderNumber}`);
     } catch (err) {
+      console.error('Place order failed', err);
       toast.error('Failed to place order. Please try again.');
       setPlacing(false);
     }
@@ -290,7 +302,7 @@ export default function CheckoutPage() {
               {items.map((item) => (
                 <div key={item.id} className="flex gap-3 text-sm">
                   {item.product.image_url && (
-                    <img src={item.product.image_url} alt={item.product.name} className="h-12 w-12 rounded object-cover" />
+                    <Image src={item.product.image_url} alt={item.product.name} width={48} height={48} className="h-12 w-12 rounded object-cover" />
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="line-clamp-1 font-medium">{item.product.name}</div>
