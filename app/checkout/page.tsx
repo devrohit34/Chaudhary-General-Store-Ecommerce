@@ -1,5 +1,6 @@
 'use client';
 
+import type { PostgrestError } from '@supabase/supabase-js';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
@@ -17,6 +18,40 @@ import { useRouter } from 'next/navigation';
 
 const UPI_ID = '8051806325@axl';
 const STORE_NAME = 'Chaudhary General Store';
+
+type CheckoutAddress = {
+  full_name: string;
+  phone: string;
+  address_line1: string;
+  address_line2: string;
+  city: string;
+  state: string;
+  pincode: string;
+};
+
+type CheckoutOrder = {
+  id?: string;
+  order_number: string;
+  status: string;
+  payment_method: string;
+  payment_status: string;
+  qr_created_at: string | null;
+  subtotal: number;
+  delivery_charge: number;
+  gst_amount: number;
+  total_amount: number;
+  address_snapshot: CheckoutAddress;
+  delivery_slot: string;
+  delivery_otp: string;
+  is_express: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+type SupabaseInsertResult<T> = {
+  data: T[] | T | null;
+  error: PostgrestError | null;
+};
 
 const deliverySlots = [
   'Express - 30 mins (₹20 extra)',
@@ -76,12 +111,15 @@ export default function CheckoutPage() {
         updated_at: now,
       };
 
-      const orderInsertResult = await supabase.from('orders').insert(orderPayload);
-      const order = orderInsertResult?.data && !Array.isArray(orderInsertResult.data)
-        ? orderInsertResult.data
-        : Array.isArray(orderInsertResult?.data) && orderInsertResult.data.length > 0
-          ? orderInsertResult.data[0]
-          : null;
+      const orderInsertResult = (await supabase.from('orders').insert(orderPayload)) as SupabaseInsertResult<CheckoutOrder>;
+      const orderRows = orderInsertResult?.data;
+      const order = Array.isArray(orderRows)
+        ? orderRows[0] ?? null
+        : orderRows ?? null;
+
+      if (orderInsertResult.error) {
+        throw new Error(orderInsertResult.error.message);
+      }
 
       if (!order?.id) {
         throw new Error('Order creation did not return a valid order id.');
